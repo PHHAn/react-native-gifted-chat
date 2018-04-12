@@ -301,6 +301,12 @@ class GiftedChat extends React.Component {
     this._messageContainerRef.scrollTo({ y: 0, animated });
   }
 
+  renderTesseGiftAnimetion() {
+    if (this.props.renderTesseGiftAnimetion) {
+      return this.props.renderTesseGiftAnimetion();
+    }
+    return null;
+  }
 
   renderMessages() {
     const AnimatedView = this.props.isAnimated === true ? Animated.View : View;
@@ -317,6 +323,7 @@ class GiftedChat extends React.Component {
           ref={(component) => (this._messageContainerRef = component)}
 
         />
+        {this.renderTesseGiftAnimetion()}
         {this.renderChatFooter()}
       </AnimatedView>
     );
@@ -521,6 +528,7 @@ GiftedChat.defaultProps = {
   onLoadEarlier: () => { },
   isLoadingEarlier: false,
   renderLoading: null,
+  renderTesseGiftAnimetion: null,
   renderLoadEarlier: null,
   renderAvatar: undefined,
   showUserAvatar: false,
@@ -564,6 +572,7 @@ GiftedChat.propTypes = {
   text: PropTypes.string,
   placeholder: PropTypes.string,
   messageIdGenerator: PropTypes.func,
+  renderTesseGiftAnimetion: PropTypes.func,
   user: PropTypes.object,
   onSend: PropTypes.func,
   locale: PropTypes.string,
