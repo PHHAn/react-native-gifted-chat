@@ -339,7 +339,7 @@ class GiftedChat extends React.Component {
             onIndexChanged={(index) => this.onSwiperIndexChanged(index)}
           >
             <View style={styles.container} />
-            <View style={styles.container}>
+            <View {...this.props.panHandlers} style={styles.container}>
               {this.renderheader()}
               <MessageContainer
                 {...this.props}
@@ -351,12 +351,7 @@ class GiftedChat extends React.Component {
               {this.renderTesseGiftAnimetion()}
             </View>
           </Swiper>
-          {
-            (this.state.swiperIndex === 1) ?
-            this.renderChatFooter()
-            :
-            null
-          }
+          {this.renderChatFooter()}
         </AnimatedView>
       );
     }
@@ -504,7 +499,10 @@ class GiftedChat extends React.Component {
       },
     };
     if (this.props.renderInputToolbar) {
-      return this.props.renderInputToolbar(inputToolbarProps);
+      if (this.state.swiperIndex === 1) {
+        return this.props.renderInputToolbar(inputToolbarProps);
+      }
+      return null;
     }
     return (
       <InputToolbar
@@ -618,9 +616,11 @@ GiftedChat.defaultProps = {
   maxInputLength: null,
   forceGetKeyboardHeight: false,
   inverted: true,
+  panHandlers: null,
 };
 
 GiftedChat.propTypes = {
+  panHandlers: PropTypes.object,
   isSwipeable: PropTypes.bool,
   renderHeader: PropTypes.func,
   messages: PropTypes.arrayOf(PropTypes.object),
