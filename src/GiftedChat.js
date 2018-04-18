@@ -9,6 +9,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Animated, Platform, StyleSheet, View } from 'react-native';
+import Swiper from 'react-native-swiper';
 
 import ActionSheet from '@expo/react-native-action-sheet';
 import moment from 'moment';
@@ -308,14 +309,53 @@ class GiftedChat extends React.Component {
     return null;
   }
 
+  renderheader() {
+    if (this.props.renderHeader) {
+      return this.props.renderHeader();
+    }
+    return null;
+  }
+
   renderMessages() {
     const AnimatedView = this.props.isAnimated === true ? Animated.View : View;
+    if (this.props.isSwipeable) {
+      return (
+        <AnimatedView
+          style={{
+            height: this.state.messagesContainerHeight,
+          }}
+        >
+          <Swiper
+            horizontal
+            index={1}
+            loop={false}
+            showsPagination={false}
+            onIndexChanged={(index) => this.props.onSwipeableViewIndexChange(index)}
+          >
+            <View style={styles.container} />
+            <View style={styles.container}>
+              {this.renderheader()}
+              <MessageContainer
+                {...this.props}
+                invertibleScrollViewProps={this.invertibleScrollViewProps}
+                messages={this.getMessages()}
+                ref={(component) => (this._messageContainerRef = component)}
+
+              />
+              {this.renderTesseGiftAnimetion()}
+            </View>
+          </Swiper>
+          {this.renderChatFooter()}
+        </AnimatedView>
+      );
+    }
     return (
       <AnimatedView
         style={{
           height: this.state.messagesContainerHeight,
         }}
       >
+        {this.renderheader()}
         <MessageContainer
           {...this.props}
           invertibleScrollViewProps={this.invertibleScrollViewProps}
@@ -511,6 +551,9 @@ GiftedChat.childContextTypes = {
 };
 
 GiftedChat.defaultProps = {
+  onSwipeableViewIndexChange: null,
+  isSwipeable: false,
+  renderHeader: null,
   messages: [],
   text: undefined,
   placeholder: DEFAULT_PLACEHOLDER,
@@ -568,6 +611,9 @@ GiftedChat.defaultProps = {
 };
 
 GiftedChat.propTypes = {
+  onSwipeableViewIndexChange: PropTypes.func,
+  isSwipeable: PropTypes.bool,
+  renderHeader: PropTypes.func,
   messages: PropTypes.arrayOf(PropTypes.object),
   text: PropTypes.string,
   placeholder: PropTypes.string,
