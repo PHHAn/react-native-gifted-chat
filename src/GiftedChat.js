@@ -8,7 +8,7 @@
 
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Animated, Platform, StyleSheet, View } from 'react-native';
+import { Animated, Platform, StyleSheet, View, LayoutAnimation } from 'react-native';
 import Swiper from 'react-native-swiper';
 
 import ActionSheet from '@expo/react-native-action-sheet';
@@ -59,6 +59,7 @@ class GiftedChat extends React.Component {
       composerHeight: MIN_COMPOSER_HEIGHT,
       messagesContainerHeight: null,
       typingDisabled: false,
+      swiperIndex: 1,
     };
 
     this.onKeyboardWillShow = this.onKeyboardWillShow.bind(this);
@@ -302,6 +303,11 @@ class GiftedChat extends React.Component {
     this._messageContainerRef.scrollTo({ y: 0, animated });
   }
 
+  onSwiperIndexChanged(index) {
+    LayoutAnimation.linear();
+    this.setState({ swiperIndex: index });
+  }
+
   renderTesseGiftAnimetion() {
     if (this.props.renderTesseGiftAnimetion) {
       return this.props.renderTesseGiftAnimetion();
@@ -330,7 +336,7 @@ class GiftedChat extends React.Component {
             index={1}
             loop={false}
             showsPagination={false}
-            onIndexChanged={(index) => this.props.onSwipeableViewIndexChange(index)}
+            onIndexChanged={(index) => this.onSwiperIndexChanged(index)}
           >
             <View style={styles.container} />
             <View style={styles.container}>
@@ -345,7 +351,12 @@ class GiftedChat extends React.Component {
               {this.renderTesseGiftAnimetion()}
             </View>
           </Swiper>
-          {this.renderChatFooter()}
+          {
+            (this.state.swiperIndex === 1) ?
+            this.renderChatFooter()
+            :
+            null
+          }
         </AnimatedView>
       );
     }
@@ -551,7 +562,6 @@ GiftedChat.childContextTypes = {
 };
 
 GiftedChat.defaultProps = {
-  onSwipeableViewIndexChange: null,
   isSwipeable: false,
   renderHeader: null,
   messages: [],
@@ -611,7 +621,6 @@ GiftedChat.defaultProps = {
 };
 
 GiftedChat.propTypes = {
-  onSwipeableViewIndexChange: PropTypes.func,
   isSwipeable: PropTypes.bool,
   renderHeader: PropTypes.func,
   messages: PropTypes.arrayOf(PropTypes.object),
