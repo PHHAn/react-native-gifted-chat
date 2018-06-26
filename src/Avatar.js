@@ -90,9 +90,9 @@ const styles = {
     },
     onBottom: {},
     image: {
-      height: 36,
-      width: 36,
-      borderRadius: 18,
+      height: 18,
+      width: 18,
+      borderRadius: 9,
     },
   }),
 };
