@@ -143,6 +143,7 @@ export default class Bubble extends React.Component {
         ]}
       >
         <View
+          opacity={this.props.currentMessage.status === 'sending' ? 0.5 : 1}
           style={[
             styles[this.props.position].wrapper,
             this.props.wrapperStyle[this.props.position],
